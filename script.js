@@ -13,6 +13,7 @@ let snake = [
 let dx = grid;
 let dy = 0;
 let score = 0;
+let highScore = localStorage.getItem("highScore") || 0;
 let gameInterval;
 let gameOverFlag = false;
 
@@ -57,7 +58,6 @@ function draw() {
         snake.pop();
     }
 
-    // Desenha cobra
     snake.forEach((segment, i) => {
         ctx.fillStyle = i === 0 ? "#0f0" : "#0a0";
         ctx.fillRect(segment.x, segment.y, grid, grid);
@@ -65,7 +65,6 @@ function draw() {
         ctx.strokeRect(segment.x, segment.y, grid, grid);
     });
 
-    // Desenha comida
     ctx.fillStyle = "#f00";
     ctx.fillRect(food.x, food.y, grid, grid);
 }
@@ -83,16 +82,17 @@ function checkCollision() {
     return false;
 }
 
-function gameLoop() {
-    if (gameOverFlag) return;
-    draw();
-    if (checkCollision()) gameOver();
-}
-
 function gameOver() {
     gameOverFlag = true;
     clearInterval(gameInterval);
-    alert(`Game Over! Pontuação final: ${score}`);
+    
+    // Atualiza o recorde
+    if (score > highScore) {
+        highScore = score;
+        localStorage.setItem("highScore", highScore);
+    }
+    
+    alert(`Game Over!\nPontuação: ${score}\nRecorde: ${highScore}`);
 }
 
 function resetGame() {
@@ -104,6 +104,12 @@ function resetGame() {
     randomFood();
     clearInterval(gameInterval);
     gameInterval = setInterval(gameLoop, 100);
+}
+
+function gameLoop() {
+    if (gameOverFlag) return;
+    draw();
+    if (checkCollision()) gameOver();
 }
 
 // Iniciar
