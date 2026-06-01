@@ -9,7 +9,8 @@ let snake = [
     { x: 140, y: 160 },
     { x: 120, y: 160 }
 ];
-
+let combo = 1;
+let lastFoodTime = Date.now();
 let level = 1;
 let dx = grid;
 let dy = 0;
@@ -119,6 +120,16 @@ function resetGame() {
     clearInterval(gameInterval);
     gameInterval = setInterval(gameLoop, 100);
 }
+const now = Date.now();
+
+if (now - lastFoodTime < 3000) {
+    combo++;
+} else {
+    combo = 1;
+}
+
+score += 10 * combo;
+lastFoodTime = now;
 
 function gameLoop() {
     if (gameOverFlag) return;
