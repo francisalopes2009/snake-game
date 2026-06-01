@@ -10,6 +10,7 @@ let snake = [
     { x: 120, y: 160 }
 ];
 
+let level = 1;
 let dx = grid;
 let dy = 0;
 let score = 0;
@@ -51,7 +52,7 @@ function draw() {
     snake.unshift(head);
 
     if (head.x === food.x && head.y === food.y) {
-        score += 10;
+        score += snake.length;
         scoreElement.textContent = score;
         randomFood();
     } else {
@@ -80,6 +81,19 @@ function checkCollision() {
         }
     }
     return false;
+}
+score += 10;
+
+const newLevel = Math.floor(score / 100) + 1;
+
+if (newLevel > level) {
+    level = newLevel;
+
+    clearInterval(gameInterval);
+
+    const speed = Math.max(40, 100 - (level - 1) * 10);
+
+    gameInterval = setInterval(gameLoop, speed);
 }
 
 function gameOver() {
